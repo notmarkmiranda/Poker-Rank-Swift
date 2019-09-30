@@ -8,38 +8,31 @@
 
 import UIKit
 import Firebase
+import FirebaseAuth
 import CodableFirebase
 
 class LeaguesTableViewController: UITableViewController {
     var leagues = [League]()
+    var db = Firestore.firestore()
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        let db = Firestore.firestore()
-        let leaguesRef = db.collection("leagues")
-        let query = leaguesRef.whereField("public_league", isEqualTo: true).order(by: "name")
-        query.getDocuments() { (querySnapshot, err) in
-            if let err = err {
-                print("Error getting documents: \(err)")
-            } else {
-                for document in querySnapshot!.documents {
-                    let league = try! FirebaseDecoder().decode(League.self, from: document.data())
-                    self.leagues.append(league)
-                    let indexPath = IndexPath(row: self.leagues.count - 1, section: 0)
-                    self.tableView.insertRows(at: [indexPath], with: .fade)
-                }
-            }
+        navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
+        if leagues.isEmpty {
+            loadLeagues()
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        self.navigationItem.title = "Public Leagues"
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
+        if Auth.auth().currentUser != nil {
+            self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Log Out", style: .plain, target: self, action: #selector(logOut))
+        }
+        self.navigationItem.rightBarButtonItem = rightBarButtonItem()
     }
 
     // MARK: - Table view data source
@@ -63,7 +56,47 @@ class LeaguesTableViewController: UITableViewController {
         }
         return cell
     }
-
+    
+    func loadLeagues() {
+        let leaguesRef = db.collection("leagues")
+        let query = leaguesRef.whereField("public_league", isEqualTo: true).order(by: "name")
+        query.getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print("Error getting documents: \(err)")
+            } else {
+                for document in querySnapshot!.documents {
+                    let league = try! FirebaseDecoder().decode(League.self, from: document.data())
+                    self.leagues.append(league)
+                    let indexPath = IndexPath(row: self.leagues.count - 1, section: 0)
+                    self.tableView.insertRows(at: [indexPath], with: .fade)
+                }
+            }
+        }
+    }
+    
+    func rightBarButtonItem() -> UIBarButtonItem {
+        if Auth.auth().currentUser != nil {
+            return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: nil)
+        } else {
+            return UIBarButtonItem(title: "Log In", style: .plain, target: self, action: #selector(loginButtonTapped))
+        }
+        
+    }
+    
+    @objc
+    func loginButtonTapped() {
+        print("Button tapped!")
+        performSegue(withIdentifier: "leaguesToLogin", sender: self)
+    }
+    
+    @objc
+    func logOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch let signOutError as NSError {
+          print ("Error signing out: %@", signOutError)
+        }
+    }
 
     /*
     // Override to support conditional editing of the table view.

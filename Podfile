@@ -6,6 +6,7 @@ target 'Poker Rank Swift' do
   use_frameworks!
 
   # Pods for Poker Rank Swift
+  pod 'FirebaseAuth'
   pod 'Firebase/Core'
   pod 'Firebase/Firestore'
   pod 'CodableFirebase'
