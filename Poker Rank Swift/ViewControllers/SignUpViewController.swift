@@ -9,64 +9,63 @@
 import UIKit
 import Firebase
 import FirebaseAuth
+import FirebaseFirestore
 
 class SignUpViewController: UIViewController {
-    var db = Firestore.firestore()
+  var db = Firestore.firestore()
+  @IBOutlet weak var signUpButton: UIButton!
+  @IBOutlet weak var errorMessage: UILabel!
+  @IBOutlet weak var emailAddressTextField: UITextField!
+  @IBOutlet weak var passwordTextField: UITextField!
+  @IBOutlet weak var passwordConfirmationTextField: UITextField!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+      
+    signUpButton.layer.cornerRadius = 5
 
-    @IBOutlet weak var emailTextField: UITextField!
-    @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var passwordConfirmationTextField: UITextField!
-    @IBOutlet weak var signUpButton: UIButton!
-    @IBOutlet weak var errorMessage: UILabel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        signUpButton.layer.cornerRadius = 5
-        errorMessage.layer.cornerRadius = 10
-        errorMessage.layer.masksToBounds = true
-        errorMessage.isHidden = true
-        self.navigationItem.title = "Sign Up"
-        // Do any additional setup after loading the view.
-    }
-    
-    @IBAction func signUpButtonTapped(_ sender: UIButton) {
-        // check for uniqueness of email address - MAYBE NOT
-        // confirm passwords match
-        if let password = passwordTextField.text, let passwordConfirmation = passwordConfirmationTextField.text {
-            if password.isEmpty == false && password != passwordConfirmation {
-                errorMessage.text = "passwords do not match"
-                errorMessage.isHidden = false
-            } else {
-                if let emailAddress = emailTextField.text {
-                    Auth.auth().createUser(withEmail: emailAddress, password: password) { (result, error) in
-                        if error == nil {
-                            print("um, create a new flow?")
-//                            self.performSegue(withIdentifier: <#T##String#>, sender: <#T##Any?#>)
-                        }
-                    }
-                }
-                
-            }
-        }
-        // sign up the user?
-    }
+    errorMessage.layer.cornerRadius = 10
+    errorMessage.layer.masksToBounds = true
+    errorMessage.isHidden = true
 
-    @IBAction func editingDidEnd(_ sender: UITextField) {
-        errorMessage.isHidden = true
-        // check if it is blank
-        if sender == emailTextField {
-            if let emailAddress = sender.text {
-                if emailAddress.isEmpty {
-                    errorMessage.text = "email address cannot be blank"
-                    errorMessage.isHidden = false
-                }
-            }
+    self.navigationItem.title = "Sign Up"
+    self.navigationItem.backBarButtonItem?.title = ""
+  }
+  
+  @IBAction func editingDidEnd(_ sender: UITextField) {
+    if sender == emailAddressTextField {
+      if sender.text == "" {
+        errorMessage.text = "email address cannot be blank"
+        errorMessage.isHidden = false
+      }
+    }
+  }
+  
+  @IBAction func editingDidBegin(_ sender: UITextField) {
+    errorMessage.isHidden = true
+  }
+  
+  @IBAction func signUpButtonTapped(_ sender: UIButton) {
+    errorMessage.isHidden = true
+    if let password = passwordTextField.text, let passwordConfirmation = passwordConfirmationTextField.text, let emailAddress = emailAddressTextField.text {
+      if password != passwordConfirmation {
+        errorMessage.text = "passwords must match"
+        errorMessage.isHidden = false
+      } else {
+        Auth.auth().createUser(withEmail: emailAddress, password: password) { authResult, error in
+          guard let user = authResult?.user, error == nil else {
+            self.errorMessage.text = error!.localizedDescription
+            self.errorMessage.isHidden = false
+            print("something went wrong: \(error!.localizedDescription)")
+            return
+          }
+          print("\(user.email!) created")
+          self.emailAddressTextField.text = ""
+          self.passwordTextField.text = ""
+          self.passwordConfirmationTextField.text = ""
+          self.tabBarController?.selectedIndex = 0
         }
-        
-        // check if it is unique
+      }
     }
-    @IBAction func editingDidBegin(_ sender: UITextField) {
-        errorMessage.isHidden = true
-    }
+  }
 }

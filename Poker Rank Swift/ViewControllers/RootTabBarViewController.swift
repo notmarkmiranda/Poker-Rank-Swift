@@ -11,7 +11,8 @@ import FirebaseAuth
 
 class RootTabBarViewController: UITabBarController {
   var user = false
-    
+  var viewControllersBackup = [UIViewController]()
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     delegate = self
@@ -23,9 +24,21 @@ class RootTabBarViewController: UITabBarController {
   
   func buildTabBarMenu() {
     guard var allViewControllers = self.viewControllers else { return }
+    
+    if self.viewControllersBackup.isEmpty {
+      self.viewControllersBackup = self.viewControllers!
+    }
+    
+    if self.viewControllersBackup.count != self.viewControllers!.count {
+      allViewControllers = self.viewControllersBackup
+    }
+    
+    print(self.viewControllersBackup)
+    self.viewControllers = viewControllersBackup
     if Auth.auth().currentUser != nil {
-      allViewControllers.remove(at: 2)
+      allViewControllers.remove(at: 3)
     } else {
+      allViewControllers.remove(at: 2)
       allViewControllers.remove(at: 1)
     }
     

@@ -28,6 +28,8 @@ class LoginViewController: UIViewController {
     if let emailAddress = emailAddressTextField.text, let password = passwordTextField.text {
       Auth.auth().signIn(withEmail: emailAddress, password: password) { (user, error) in
         if error == nil {
+          self.emailAddressTextField.text = ""
+          self.passwordTextField.text = ""
           self.tabBarController?.selectedIndex = 0
         }
       }
