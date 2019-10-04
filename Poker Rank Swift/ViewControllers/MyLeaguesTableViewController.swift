@@ -12,7 +12,7 @@ import FirebaseAuth
 import FirebaseFirestore
 import CodableFirebase
 
-class MyLeaguesTableViewController: UITableViewController {
+class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControllerDelegate {
   var myLeagues = [League]()
   var db = Firestore.firestore()
   var user = Auth.auth().currentUser
@@ -30,8 +30,11 @@ class MyLeaguesTableViewController: UITableViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    // set up navigation controller
     self.navigationItem.title = "My Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
+    navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(segueToCreate))
   }
 
   // MARK: - Table view data source
@@ -82,6 +85,21 @@ class MyLeaguesTableViewController: UITableViewController {
     }
   }
 
+  @objc
+  func segueToCreate() {
+    performSegue(withIdentifier: "myLeaguesToCreate", sender: self)
+  }
+  
+  func appendNewLeague(_ league: League) {
+    print("HEREWEARE")
+    print(myLeagues.count)
+    myLeagues.append(league)
+    print(myLeagues.count)
+    let indexPath = IndexPath(row: (self.myLeagues.count - 1), section: 0)
+    tableView.insertRows(at: [indexPath], with: .fade)
+  }
+  
+  @IBAction func unwindToMyLeaguesVC(segue: UIStoryboardSegue) {}
 
     /*
     // Override to support conditional editing of the table view.
@@ -128,4 +146,8 @@ class MyLeaguesTableViewController: UITableViewController {
     }
     */
 
+}
+
+protocol NewLeagueViewControllerDelegate: AnyObject {
+  func appendNewLeague(_ league: League)
 }
