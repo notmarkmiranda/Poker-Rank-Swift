@@ -24,8 +24,8 @@ class NewLeagueViewController: UIViewController {
     super.viewDidLoad()
     
     createLeagueButton.layer.cornerRadius = 5
-    self.navigationItem.title = "Create New League"
-    navigationController?.navigationBar.prefersLargeTitles = true
+//    self.navigationItem.title = "Create New League"
+//    navigationController?.navigationBar.prefersLargeTitles = true
     errorMessage.isHidden = true
     publicLeagueSwitch.isOn = false
     
