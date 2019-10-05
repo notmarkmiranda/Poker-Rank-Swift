@@ -77,12 +77,13 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
         } else {
           do {
             for document in querySnapshot!.documents {
-              let league = try FirebaseDecoder().decode(League.self, from: document.data())
+              print(document.data())
+              var league = try FirebaseDecoder().decode(League.self, from: document.data())
+              league.id = document.documentID
               self.myLeagues.append(league)
               let indexPath = IndexPath(row: (self.myLeagues.count - 1), section: 0)
               self.tableView.insertRows(at: [indexPath], with: .fade)
             }
-            
           } catch {
             print("Could not convert to League Model")
           }
@@ -114,17 +115,18 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     }
     */
 
-    /*
+    
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+      if editingStyle == .delete {
+        if let leagueID = myLeagues[indexPath.row].id {
+          db.collection("leagues").document(leagueID).delete()
+          myLeagues.remove(at: indexPath.row)
+          tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+      }
     }
-    */
+    
 
     /*
     // Override to support rearranging the table view.
