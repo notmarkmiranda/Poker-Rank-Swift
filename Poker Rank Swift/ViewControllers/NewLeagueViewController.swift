@@ -12,7 +12,7 @@ import FirebaseFirestore
 
 class NewLeagueViewController: UIViewController {
   let db = Firestore.firestore()
-  weak var newLeagueViewControllerDelegate: NewLeagueViewControllerDelegate?
+  var newLeagueViewControllerDelegate: NewLeagueViewControllerDelegate?
   
   @IBOutlet weak var createLeagueButton: UIButton!
   @IBOutlet weak var publicLeagueSwitch: UISwitch!
@@ -43,7 +43,6 @@ class NewLeagueViewController: UIViewController {
           if let documentID = ref?.documentID {
             newLeague.id = documentID
           }
-          print(self.newLeagueViewControllerDelegate)
           self.newLeagueViewControllerDelegate?.appendNewLeague(newLeague)
           self.dismiss(animated: true, completion: nil)
         }
@@ -66,4 +65,8 @@ class NewLeagueViewController: UIViewController {
     }
     */
 
+}
+
+protocol NewLeagueViewControllerDelegate: AnyObject {
+  func appendNewLeague(_ league: League)
 }

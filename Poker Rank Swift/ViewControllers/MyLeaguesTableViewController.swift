@@ -61,6 +61,12 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     return cell
   }
   
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let destination = segue.destination as? NewLeagueViewController {
+      destination.newLeagueViewControllerDelegate = self
+    }
+  }
+  
   func loadLeagues() {
     if let user = user {
       let leagueRef = db.collection("leagues")
@@ -91,7 +97,6 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
   }
   
   func appendNewLeague(_ league: League) {
-    print("HEREWEARE")
     print(myLeagues.count)
     myLeagues.append(league)
     print(myLeagues.count)
@@ -148,6 +153,4 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
 
 }
 
-protocol NewLeagueViewControllerDelegate: AnyObject {
-  func appendNewLeague(_ league: League)
-}
+
