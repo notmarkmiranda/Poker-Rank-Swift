@@ -13,7 +13,7 @@ import FirebaseFirestore
 import CodableFirebase
 
 class PublicLeaguesTableViewController: UITableViewController {
-  var leagues = [League]()
+  var leagues = Leagues.sharedInstance.publicLeagues
   var db = Firestore.firestore()
 
   override func viewWillAppear(_ animated: Bool) {
@@ -21,17 +21,14 @@ class PublicLeaguesTableViewController: UITableViewController {
     
     navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
-    
-    if leagues.isEmpty {
-      loadLeagues()
-    }
+    // THIS IS WHERE I STOPPED. I NEED TO REFRESH THE TABLEVIEW AFTER THE API CALL
   }
     
   override func viewDidLoad() {
     super.viewDidLoad()
     self.navigationItem.title = "Public Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
-
+    
     // Uncomment the following line to preserve selection between presentations
     // self.clearsSelectionOnViewWillAppear = false
 

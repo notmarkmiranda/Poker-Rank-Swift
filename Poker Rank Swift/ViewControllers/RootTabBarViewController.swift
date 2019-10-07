@@ -13,13 +13,19 @@ class RootTabBarViewController: UITabBarController {
   var user = false
   var viewControllersBackup = [UIViewController]()
   
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    Leagues.sharedInstance.loadAllLeagues(Auth.auth().currentUser)
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     delegate = self
     Auth.auth().addStateDidChangeListener { (auth, user) in
+      Leagues.sharedInstance.loadAllLeagues(user)
       self.buildTabBarMenu()
     }
-    
   }
   
   func buildTabBarMenu() {
@@ -33,7 +39,6 @@ class RootTabBarViewController: UITabBarController {
       allViewControllers = self.viewControllersBackup
     }
     
-    print(self.viewControllersBackup)
     self.viewControllers = viewControllersBackup
     if Auth.auth().currentUser != nil {
       allViewControllers.remove(at: 3)

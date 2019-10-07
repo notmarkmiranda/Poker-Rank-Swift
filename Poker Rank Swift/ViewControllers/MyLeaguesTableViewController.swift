@@ -120,9 +120,15 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == .delete {
         if let leagueID = myLeagues[indexPath.row].id {
-          db.collection("leagues").document(leagueID).delete()
-          myLeagues.remove(at: indexPath.row)
-          tableView.deleteRows(at: [indexPath], with: .fade)
+          db.collection("leagues").document(leagueID).delete { error in
+            if error == nil {
+              self.myLeagues.remove(at: indexPath.row)
+              self.tableView.deleteRows(at: [indexPath], with: .fade)
+            } else {
+              print("error deleting \(error!)")
+            }
+          }
+          
         }
       }
     }
