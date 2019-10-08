@@ -13,7 +13,7 @@ import FirebaseFirestore
 import CodableFirebase
 
 class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControllerDelegate {
-  var myLeagues = [League]()
+  var myLeagues = Leagues.sharedInstance.myLeagues
   var db = Firestore.firestore()
   var user = Auth.auth().currentUser
   
@@ -22,16 +22,12 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     
     navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemBlue]
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemBlue]
-    
-    if myLeagues.isEmpty {
-      loadLeagues()
-    }
+    loadLeagues()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    // set up navigation controller
     self.navigationItem.title = "My Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(segueToCreate))
@@ -72,12 +68,17 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
       let leagueRef = db.collection("leagues")
       let query = leagueRef.whereField("user_id", isEqualTo: user.uid).order(by: "name")
       query.getDocuments() { querySnapshot, error in
+        
+        if !self.myLeagues.isEmpty {
+          self.myLeagues.removeAll()
+          self.tableView.reloadData()
+        }
+        
         if let error = error {
           print("Error getting my leagues: \(error)")
         } else {
           do {
             for document in querySnapshot!.documents {
-              print(document.data())
               var league = try FirebaseDecoder().decode(League.self, from: document.data())
               league.id = document.documentID
               self.myLeagues.append(league)
@@ -98,15 +99,13 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
   }
   
   func appendNewLeague(_ league: League) {
-    print(myLeagues.count)
     myLeagues.append(league)
-    print(myLeagues.count)
+    if league.public_league {
+      Leagues.sharedInstance.publicLeagues.append(league)
+    }
     let indexPath = IndexPath(row: (self.myLeagues.count - 1), section: 0)
     tableView.insertRows(at: [indexPath], with: .fade)
   }
-  
-  @IBAction func unwindToMyLeaguesVC(segue: UIStoryboardSegue) {}
-
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -128,10 +127,11 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
               print("error deleting \(error!)")
             }
           }
-          
+
         }
       }
     }
+  
     
 
     /*

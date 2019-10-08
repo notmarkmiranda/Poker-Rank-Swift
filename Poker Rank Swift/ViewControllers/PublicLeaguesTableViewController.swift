@@ -21,19 +21,16 @@ class PublicLeaguesTableViewController: UITableViewController {
     
     navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
-    // THIS IS WHERE I STOPPED. I NEED TO REFRESH THE TABLEVIEW AFTER THE API CALL
+    
+    loadLeagues()
+    tableView.reloadData()
   }
     
   override func viewDidLoad() {
     super.viewDidLoad()
+    
     self.navigationItem.title = "Public Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
-    
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem
   }
 
   // MARK: - Table view data source
@@ -51,7 +48,13 @@ class PublicLeaguesTableViewController: UITableViewController {
   func loadLeagues() {
     let leaguesRef = db.collection("leagues")
     let query = leaguesRef.whereField("public_league", isEqualTo: true).order(by: "name")
-    query.getDocuments() { (querySnapshot, error) in
+    query.getDocuments() { querySnapshot, error in
+      
+      if !self.leagues.isEmpty {
+        self.leagues.removeAll()
+        self.tableView.reloadData()
+      }
+
       if let error = error {
         print("Error getting documents: \(error)")
       } else {
@@ -62,7 +65,7 @@ class PublicLeaguesTableViewController: UITableViewController {
             let indexPath = IndexPath(row: (self.leagues.count - 1), section: 0)
             self.tableView.insertRows(at: [indexPath], with: .fade)
           } catch {
-            print("Could not convert to League Model")
+            print("Error: Could not convert to League Model")
           }
         }
       }

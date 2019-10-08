@@ -8,22 +8,21 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
 
 class RootTabBarViewController: UITabBarController {
   var user = false
   var viewControllersBackup = [UIViewController]()
+  let leaguesRef = Firestore.firestore().collection("leagues")
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
-    
-    Leagues.sharedInstance.loadAllLeagues(Auth.auth().currentUser)
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     delegate = self
     Auth.auth().addStateDidChangeListener { (auth, user) in
-      Leagues.sharedInstance.loadAllLeagues(user)
       self.buildTabBarMenu()
     }
   }
@@ -49,17 +48,6 @@ class RootTabBarViewController: UITabBarController {
     
     self.viewControllers = allViewControllers
   }
-
-  /*
-  // MARK: - Navigation
-
-  // In a storyboard-based application, you will often want to do a little preparation before navigation
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-    // Get the new view controller using segue.destination.
-    // Pass the selected object to the new view controller.
-  }
-  */
-
 }
 
 extension RootTabBarViewController: UITabBarControllerDelegate  {
