@@ -72,6 +72,37 @@
             </objects>
             <point key="canvasLocation" x="2806" y="-368"/>
         </scene>
+        <!--League Detail View Controller-->
+        <scene sceneID="jN4-2g-9P1">
+            <objects>
+                <viewController storyboardIdentifier="LeagueDetailViewController" id="10c-8W-8Bu" customClass="LeagueDetailViewController" customModule="Poker_Rank_Swift" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qNe-IN-Th1">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z79-yB-5zo">
+                                <rect key="frame" x="30" y="74" width="354" height="20.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="hu2-4F-bTk" firstAttribute="trailing" secondItem="Z79-yB-5zo" secondAttribute="trailing" constant="30" id="RJd-GR-07v"/>
+                            <constraint firstItem="Z79-yB-5zo" firstAttribute="leading" secondItem="hu2-4F-bTk" secondAttribute="leading" constant="30" id="TMa-Bl-G51"/>
+                            <constraint firstItem="Z79-yB-5zo" firstAttribute="top" secondItem="hu2-4F-bTk" secondAttribute="top" constant="30" id="ocq-Gg-hvC"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="hu2-4F-bTk"/>
+                    </view>
+                    <connections>
+                        <outlet property="leagueName" destination="Z79-yB-5zo" id="Bar-Ik-rGk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1qc-Xt-TX1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3716" y="-50"/>
+        </scene>
         <!--My Leagues Table View Controller-->
         <scene sceneID="irS-9Y-FG4">
             <objects>
@@ -111,9 +142,7 @@
                             <outlet property="delegate" destination="cmN-9A-vRM" id="eCI-ZP-sIZ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="6qL-su-gSW">
-                        <barButtonItem key="backBarButtonItem" title=" " id="mDr-iu-fnO"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" id="6qL-su-gSW"/>
                     <connections>
                         <segue destination="qXV-wi-rx4" kind="presentation" identifier="myLeaguesToCreate" id="7ag-jV-yQa"/>
                     </connections>
@@ -239,7 +268,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uC1-ry-iV1" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3715.9420289855075" y="-33.482142857142854"/>
+            <point key="canvasLocation" x="3716" y="682"/>
         </scene>
         <!--Public Leagues-->
         <scene sceneID="xLb-Hp-CN9">

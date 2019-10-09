@@ -23,6 +23,7 @@
 		B452BD21233FC0F100868FD3 /* MyLeaguesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452BD20233FC0F100868FD3 /* MyLeaguesTableViewController.swift */; };
 		B452BD23233FC8E000868FD3 /* RootTabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B452BD22233FC8E000868FD3 /* RootTabBarViewController.swift */; };
 		B4835BBD233DB1CE0059FDAD /* League.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4835BBC233DB1CE0059FDAD /* League.swift */; };
+		B4B2339D234C32CD00387E1C /* LeagueDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B2339C234C32CD00387E1C /* LeagueDetailViewController.swift */; };
 		B4D6A34A233C64EF0015EF47 /* LeaguesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D6A349233C64EF0015EF47 /* LeaguesTableViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +47,7 @@
 		B452BD20233FC0F100868FD3 /* MyLeaguesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLeaguesTableViewController.swift; sourceTree = "<group>"; };
 		B452BD22233FC8E000868FD3 /* RootTabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabBarViewController.swift; sourceTree = "<group>"; };
 		B4835BBC233DB1CE0059FDAD /* League.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = League.swift; sourceTree = "<group>"; };
+		B4B2339C234C32CD00387E1C /* LeagueDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LeagueDetailViewController.swift; path = "Poker Rank Swift/ViewControllers/LeagueDetailViewController.swift"; sourceTree = "<group>"; };
 		B4D6A349233C64EF0015EF47 /* LeaguesTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaguesTableViewController.swift; sourceTree = "<group>"; };
 		ED7E2D28959CC769CBB886FE /* Pods_Poker_Rank_Swift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Poker_Rank_Swift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -73,6 +75,7 @@
 		B44565A7233C619F00B529B0 = {
 			isa = PBXGroup;
 			children = (
+				B4B2339C234C32CD00387E1C /* LeagueDetailViewController.swift */,
 				B44565B2233C619F00B529B0 /* Poker Rank Swift */,
 				B44565B1233C619F00B529B0 /* Products */,
 				C28DDEEC487938FA60D24ED4 /* Pods */,
@@ -263,6 +266,7 @@
 				B4D6A34A233C64EF0015EF47 /* LeaguesTableViewController.swift in Sources */,
 				B44565B4233C619F00B529B0 /* AppDelegate.swift in Sources */,
 				B452BD1F233FC0A200868FD3 /* PublicLeaguesTableViewController.swift in Sources */,
+				B4B2339D234C32CD00387E1C /* LeagueDetailViewController.swift in Sources */,
 				B4835BBD233DB1CE0059FDAD /* League.swift in Sources */,
 				B434545C2349089C006BDE26 /* Leagues.swift in Sources */,
 				B434545A23459169006BDE26 /* NewLeagueViewController.swift in Sources */,

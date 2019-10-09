@@ -132,7 +132,13 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
       }
     }
   
-    
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let league = myLeagues[indexPath.row]
+    if let viewController = storyboard?.instantiateViewController(identifier: "LeagueDetailViewController") as? LeagueDetailViewController {
+      viewController.league = league
+      navigationController?.pushViewController(viewController, animated: true)
+    }
+  }
 
     /*
     // Override to support rearranging the table view.

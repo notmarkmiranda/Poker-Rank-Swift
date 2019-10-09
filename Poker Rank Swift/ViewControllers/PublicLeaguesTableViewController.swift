@@ -83,6 +83,14 @@ class PublicLeaguesTableViewController: UITableViewController {
 
     return cell
   }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    let league = leagues[indexPath.row]
+    if let viewController = storyboard?.instantiateViewController(identifier: "LeagueDetailViewController") as? LeagueDetailViewController {
+      viewController.league = league
+      navigationController?.pushViewController(viewController, animated: true)
+    }
+  }
 
   /*
   // Override to support conditional editing of the table view.
