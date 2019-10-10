@@ -67,21 +67,17 @@ class SignUpViewController: UIViewController {
               let userData = ["email": user.email, "displayName": self.displayNameTextField.text ?? "", "uid": authResult?.user.uid ?? ""]
               let newUser = try FirebaseDecoder().decode(User.self, from: userData)
               let usersRef = self.db.collection("users")
-//              var ref: DocumentReference? = nil
               usersRef.document(userId).setData(newUser.createDictionary()) { error in
-                
+                if let error = error {
+                  print("Error copying user: \(error)")
+                }
               }
-              print(newUser)
+              print("User created and duplicated: \(newUser)")
             }
-            
-            
           } catch {
             print(error)
             print("Error: could not decode user")
           }
-          // decode user as User.self
-          // create user in databaseRef for "users"
-                    
           
           self.emailAddressTextField.text = ""
           self.passwordTextField.text = ""
