@@ -10,11 +10,13 @@ import UIKit
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
+import CodableFirebase
 
 class SignUpViewController: UIViewController {
   var db = Firestore.firestore()
   @IBOutlet weak var signUpButton: UIButton!
   @IBOutlet weak var errorMessage: UILabel!
+  @IBOutlet weak var displayNameTextField: UITextField!
   @IBOutlet weak var emailAddressTextField: UITextField!
   @IBOutlet weak var passwordTextField: UITextField!
   @IBOutlet weak var passwordConfirmationTextField: UITextField!
@@ -52,14 +54,35 @@ class SignUpViewController: UIViewController {
         errorMessage.text = "passwords must match"
         errorMessage.isHidden = false
       } else {
+        // TODO => can this be extract to a service class?
         Auth.auth().createUser(withEmail: emailAddress, password: password) { authResult, error in
           guard let user = authResult?.user, error == nil else {
             self.errorMessage.text = error!.localizedDescription
             self.errorMessage.isHidden = false
-            print("something went wrong: \(error!.localizedDescription)")
+            print("Error: creating user \(error!.localizedDescription)")
             return
           }
-          print("\(user.email!) created")
+          do {
+            if let userId = authResult?.user.uid {
+              let userData = ["email": user.email, "displayName": self.displayNameTextField.text ?? "", "uid": authResult?.user.uid ?? ""]
+              let newUser = try FirebaseDecoder().decode(User.self, from: userData)
+              let usersRef = self.db.collection("users")
+//              var ref: DocumentReference? = nil
+              usersRef.document(userId).setData(newUser.createDictionary()) { error in
+                
+              }
+              print(newUser)
+            }
+            
+            
+          } catch {
+            print(error)
+            print("Error: could not decode user")
+          }
+          // decode user as User.self
+          // create user in databaseRef for "users"
+                    
+          
           self.emailAddressTextField.text = ""
           self.passwordTextField.text = ""
           self.passwordConfirmationTextField.text = ""
