@@ -9,21 +9,53 @@
 import UIKit
 import FirebaseAuth
 import FirebaseFirestore
+import CodableFirebase
+
+protocol RootTabBarDelegate {
+  func reloadTableData(leagues: [League])
+}
 
 class RootTabBarViewController: UITabBarController {
   var user = false
   var viewControllersBackup = [UIViewController]()
   let leaguesRef = Firestore.firestore().collection("leagues")
+  var rootTabBarDelegate: RootTabBarDelegate?
+  var publicLeagues = Leagues.sharedInstance.publicLeagues
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    loadLeagues()
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    delegate = self
     Auth.auth().addStateDidChangeListener { (auth, user) in
       self.buildTabBarMenu()
+    }
+  }
+  
+  func loadLeagues() {
+    let query = leaguesRef.whereField("public_league", isEqualTo: true).order(by: "name")
+    query.getDocuments() { querySnapshot, error in
+      if !self.publicLeagues.isEmpty {
+        self.publicLeagues.removeAll()
+        self.rootTabBarDelegate?.reloadTableData(leagues: [])
+      }
+      
+      if let error = error {
+        print("Error: RootTabBarVC#loadLeagues: \(error)")
+      } else {
+        for document in querySnapshot!.documents {
+          do {
+            let league = try FirebaseDecoder().decode(League.self, from: document.data())
+            self.publicLeagues.append(league)
+          } catch {
+            print("Error: RootTabBarVC#loadLeagues: converting snapshot to League model")
+          }
+        }
+      }
+      
+      self.rootTabBarDelegate?.reloadTableData(leagues: self.publicLeagues)
     }
   }
   

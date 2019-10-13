@@ -40,15 +40,31 @@ class NewLeagueViewController: UIViewController {
         if let error = error {
           print("Error adding document: \(error)")
         } else {
-          if let documentID = ref?.documentID {
-            newLeague.id = documentID
+          if let documentId = ref?.documentID {
+            newLeague.id = documentId
+            self.createInitialSeason(leagueId: documentId)
           }
           self.newLeagueViewControllerDelegate?.appendNewLeague(newLeague)
+          
           self.dismiss(animated: true, completion: nil)
         }
       }
     } else {
       print("error: something went wrong")
+    }
+  }
+  
+  func createInitialSeason(leagueId: String) {
+    let seasonRef = db.collection("seasons")
+    var ref: DocumentReference? = nil
+    ref = seasonRef.addDocument(data: [ "league_id": leagueId, "isActive": true, "completed": false ]) { error in
+      if let error = error {
+        print("Error creating initial season: \(error)")
+      } else {
+        if let documentId = ref?.documentID {
+          print("Created Initial Season: \(documentId)")
+        }
+      }
     }
   }
   

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		59771C2987219A43FAD4F080 /* Pods_Poker_Rank_Swift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED7E2D28959CC769CBB886FE /* Pods_Poker_Rank_Swift.framework */; };
 		B41CC830234ED59500786C3B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CC82F234ED59500786C3B /* User.swift */; };
+		B41CC8322350385F00786C3B /* Season.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41CC8312350385F00786C3B /* Season.swift */; };
 		B421F11323418BA4002C7F82 /* UserProfileTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B421F11223418BA4002C7F82 /* UserProfileTableViewController.swift */; };
 		B434545A23459169006BDE26 /* NewLeagueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B434545923459169006BDE26 /* NewLeagueViewController.swift */; };
 		B434545C2349089C006BDE26 /* Leagues.swift in Sources */ = {isa = PBXBuildFile; fileRef = B434545B2349089C006BDE26 /* Leagues.swift */; };
@@ -32,6 +33,7 @@
 		545CBF121ECF4A63AF5BD874 /* Pods-Poker Rank Swift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Poker Rank Swift.release.xcconfig"; path = "Target Support Files/Pods-Poker Rank Swift/Pods-Poker Rank Swift.release.xcconfig"; sourceTree = "<group>"; };
 		9A674520DA5DFBCDD9D389AA /* Pods-Poker Rank Swift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Poker Rank Swift.debug.xcconfig"; path = "Target Support Files/Pods-Poker Rank Swift/Pods-Poker Rank Swift.debug.xcconfig"; sourceTree = "<group>"; };
 		B41CC82F234ED59500786C3B /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		B41CC8312350385F00786C3B /* Season.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Season.swift; sourceTree = "<group>"; };
 		B421F11223418BA4002C7F82 /* UserProfileTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTableViewController.swift; sourceTree = "<group>"; };
 		B434545923459169006BDE26 /* NewLeagueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewLeagueViewController.swift; sourceTree = "<group>"; };
 		B434545B2349089C006BDE26 /* Leagues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leagues.swift; sourceTree = "<group>"; };
@@ -115,6 +117,7 @@
 				B4835BBC233DB1CE0059FDAD /* League.swift */,
 				B41CC82F234ED59500786C3B /* User.swift */,
 				B434545B2349089C006BDE26 /* Leagues.swift */,
+				B41CC8312350385F00786C3B /* Season.swift */,
 			);
 			indentWidth = 2;
 			path = Models;
@@ -271,6 +274,7 @@
 				B452BD1F233FC0A200868FD3 /* PublicLeaguesTableViewController.swift in Sources */,
 				B4B2339D234C32CD00387E1C /* LeagueDetailViewController.swift in Sources */,
 				B41CC830234ED59500786C3B /* User.swift in Sources */,
+				B41CC8322350385F00786C3B /* Season.swift in Sources */,
 				B4835BBD233DB1CE0059FDAD /* League.swift in Sources */,
 				B434545C2349089C006BDE26 /* Leagues.swift in Sources */,
 				B434545A23459169006BDE26 /* NewLeagueViewController.swift in Sources */,

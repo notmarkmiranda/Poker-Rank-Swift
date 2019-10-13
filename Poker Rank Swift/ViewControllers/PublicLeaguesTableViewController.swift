@@ -21,16 +21,15 @@ class PublicLeaguesTableViewController: UITableViewController {
     
     navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
-    
-    loadLeagues()
-    tableView.reloadData()
+    self.navigationItem.title = "Public Leagues"
+    navigationController?.navigationBar.prefersLargeTitles = true
   }
     
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    self.navigationItem.title = "Public Leagues"
-    navigationController?.navigationBar.prefersLargeTitles = true
+    let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
+    tabBarController.rootTabBarDelegate = self
   }
 
   // MARK: - Table view data source
@@ -41,36 +40,7 @@ class PublicLeaguesTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    // #warning Incomplete implementation, return the number of rows
     return leagues.count
-  }
-
-  func loadLeagues() {
-    let leaguesRef = db.collection("leagues")
-    let query = leaguesRef.whereField("public_league", isEqualTo: true).order(by: "name")
-    query.getDocuments() { querySnapshot, error in
-      
-      if !self.leagues.isEmpty {
-        self.leagues.removeAll()
-        self.tableView.reloadData()
-      }
-
-      if let error = error {
-        print("Error getting documents: \(error)")
-      } else {
-        for document in querySnapshot!.documents {
-          do {
-            let league = try FirebaseDecoder().decode(League.self, from: document.data())
-            self.leagues.append(league)
-            let indexPath = IndexPath(row: (self.leagues.count - 1), section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .fade)
-          } catch {
-            print("Error: Could not convert to League Model")
-          }
-        }
-      }
-      
-    }
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -137,4 +107,11 @@ class PublicLeaguesTableViewController: UITableViewController {
   }
   */
 
+}
+
+extension PublicLeaguesTableViewController: RootTabBarDelegate {
+  func reloadTableData(leagues: [League] = []) {
+    self.leagues = leagues
+    tableView.reloadData()
+  }
 }
