@@ -15,6 +15,10 @@ import CodableFirebase
 class PublicLeaguesTableViewController: UITableViewController {
   var leagues = Leagues.sharedInstance.publicLeagues
   var db = Firestore.firestore()
+  
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
 
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
@@ -30,9 +34,9 @@ class PublicLeaguesTableViewController: UITableViewController {
     
     let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
     tabBarController.rootTabBarDelegate = self
+    NotificationCenter.default.addObserver(self, selector: #selector(publicLeaguesLoaded), name: .didLoadPublicLeagues, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(addSingleLeague), name: .addSingleLeague, object: nil)
   }
-
-  // MARK: - Table view data source
 
   override func numberOfSections(in tableView: UITableView) -> Int {
     // #warning Incomplete implementation, return the number of sections
@@ -59,6 +63,19 @@ class PublicLeaguesTableViewController: UITableViewController {
     if let viewController = storyboard?.instantiateViewController(identifier: "LeagueDetailViewController") as? LeagueDetailViewController {
       viewController.league = league
       navigationController?.pushViewController(viewController, animated: true)
+    }
+  }
+  
+  @objc
+  func publicLeaguesLoaded() {
+    print("LEAGUES LOADED!")
+  }
+  
+  @objc
+  func addSingleLeague(_ notification: Notification) {
+    if let indexPath = notification.userInfo?["indexPath"] as? IndexPath, let newLeagues = notification.userInfo?["leagues"] as? [League] {
+      self.leagues = newLeagues
+      tableView.insertRows(at: [indexPath], with: .fade)
     }
   }
 

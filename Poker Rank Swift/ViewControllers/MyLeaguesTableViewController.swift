@@ -22,7 +22,7 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     
     navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemBlue]
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.systemBlue]
-    loadLeagues()
+//    loadLeagues()
   }
   
   override func viewDidLoad() {
@@ -31,6 +31,9 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     self.navigationItem.title = "My Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(segueToCreate))
+    
+    let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
+    tabBarController.rootTabBarDelegate = self
   }
 
   // MARK: - Table view data source
@@ -167,4 +170,10 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
 
 }
 
-
+extension MyLeaguesTableViewController: RootTabBarDelegate {
+  func reloadTableData(leagues: [League] = []) {
+    print("HELLO!")
+    self.myLeagues = leagues
+    tableView.reloadData()
+  }
+}

@@ -49,13 +49,17 @@ class RootTabBarViewController: UITabBarController {
           do {
             let league = try FirebaseDecoder().decode(League.self, from: document.data())
             self.publicLeagues.append(league)
+            
+            let indexPath = IndexPath(row: (self.publicLeagues.count - 1), section: 0)
+            let userInfoDictionary = ["indexPath": indexPath, "leagues": self.publicLeagues] as [String : Any]
+            NotificationCenter.default.post(name: .addSingleLeague, object: nil, userInfo: userInfoDictionary)
           } catch {
             print("Error: RootTabBarVC#loadLeagues: converting snapshot to League model")
           }
         }
       }
       
-      self.rootTabBarDelegate?.reloadTableData(leagues: self.publicLeagues)
+//      self.rootTabBarDelegate?.reloadTableData(leagues: self.publicLeagues)
     }
   }
   
