@@ -27,13 +27,12 @@ class PublicLeaguesTableViewController: UITableViewController {
     navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
     self.navigationItem.title = "Public Leagues"
     navigationController?.navigationBar.prefersLargeTitles = true
+    tableView.reloadData()
   }
     
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
-    tabBarController.rootTabBarDelegate = self
     NotificationCenter.default.addObserver(self, selector: #selector(publicLeaguesLoaded), name: .didLoadPublicLeagues, object: nil)
     NotificationCenter.default.addObserver(self, selector: #selector(addSingleLeague), name: .addSinglePublicLeague, object: nil)
   }
@@ -54,7 +53,6 @@ class PublicLeaguesTableViewController: UITableViewController {
     if let location = Leagues.sharedInstance.publicLeagues[indexPath.row].location {
       cell.detailTextLabel?.text = location
     }
-    print("HERE: \(Leagues.sharedInstance.publicLeagues.count)")
     return cell
   }
   
@@ -66,15 +64,12 @@ class PublicLeaguesTableViewController: UITableViewController {
     }
   }
   
-  @objc
-  func publicLeaguesLoaded() {
+  @objc func publicLeaguesLoaded() {
     print("LEAGUES LOADED!")
   }
   
-  @objc
-  func addSingleLeague(_ notification: Notification) {
-    if let indexPath = notification.userInfo?["indexPath"] as? IndexPath, let newLeagues = notification.userInfo?["leagues"] as? [League] {
-      print(Leagues.sharedInstance.publicLeagues)
+  @objc func addSingleLeague(_ notification: Notification) {
+    if let indexPath = notification.userInfo?["indexPath"] as? IndexPath {
       tableView.insertRows(at: [indexPath], with: .fade)
     }
   }
@@ -126,9 +121,3 @@ class PublicLeaguesTableViewController: UITableViewController {
 
 }
 
-extension PublicLeaguesTableViewController: RootTabBarDelegate {
-  func reloadTableData(leagues: [League] = []) {
-//    self.leagues = leagues
-    tableView.reloadData()
-  }
-}

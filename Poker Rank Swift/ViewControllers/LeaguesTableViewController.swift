@@ -85,7 +85,6 @@ class LeaguesTableViewController: UITableViewController {
     
     @objc
     func loginButtonTapped() {
-        print("Button tapped!")
         performSegue(withIdentifier: "leaguesToLogin", sender: self)
     }
     

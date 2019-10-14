@@ -10,6 +10,10 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 
+protocol NewLeagueViewControllerDelegate: AnyObject {
+  func appendNewLeague(_ league: League)
+}
+
 class NewLeagueViewController: UIViewController {
   let db = Firestore.firestore()
   var newLeagueViewControllerDelegate: NewLeagueViewControllerDelegate?
@@ -81,8 +85,4 @@ class NewLeagueViewController: UIViewController {
     }
     */
 
-}
-
-protocol NewLeagueViewControllerDelegate: AnyObject {
-  func appendNewLeague(_ league: League)
 }

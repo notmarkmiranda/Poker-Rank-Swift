@@ -32,8 +32,6 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     navigationController?.navigationBar.prefersLargeTitles = true
     navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(segueToCreate))
     
-    let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
-    tabBarController.rootTabBarDelegate = self
     NotificationCenter.default.addObserver(self, selector: #selector(addSingleLeague), name: .addSingleOwnedLeague, object: nil)
   }
 
@@ -68,50 +66,19 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
   }
   
   @objc func addSingleLeague(_ notification: Notification) {
-    if let indexPath = notification.userInfo?["indexPath"] as? IndexPath, let newLeagues = notification.userInfo?["leagues"] as? [League] {
+    if let indexPath = notification.userInfo?["indexPath"] as? IndexPath{
       tableView.insertRows(at: [indexPath], with: .fade)
     }
   }
-  
-//  func loadLeagues() {
-//    if let user = user {
-//      let leagueRef = db.collection("leagues")
-//      let query = leagueRef.whereField("user_id", isEqualTo: user.uid).order(by: "name")
-//      query.getDocuments() { querySnapshot, error in
-//
-//        if !self.myLeagues.isEmpty {
-//          self.myLeagues.removeAll()
-//          self.tableView.reloadData()
-//        }
-//
-//        if let error = error {
-//          print("Error getting my leagues: \(error)")
-//        } else {
-//          do {
-//            for document in querySnapshot!.documents {
-//              var league = try FirebaseDecoder().decode(League.self, from: document.data())
-//              league.id = document.documentID
-//              self.myLeagues.append(league)
-//              let indexPath = IndexPath(row: (self.myLeagues.count - 1), section: 0)
-//              self.tableView.insertRows(at: [indexPath], with: .fade)
-//            }
-//          } catch {
-//            print("Could not convert to League Model")
-//          }
-//        }
-//      }
-//    }
-//  }
 
-  @objc
-  func segueToCreate() {
+  @objc func segueToCreate() {
     performSegue(withIdentifier: "myLeaguesToCreate", sender: self)
   }
   
   func appendNewLeague(_ league: League) {
     Leagues.sharedInstance.myLeagues.append(league)
     if league.public_league {
-//      Leagues.sharedInstance.publicLeagues.append(league)
+      Leagues.sharedInstance.publicLeagues.append(league)
     }
     let indexPath = IndexPath(row: (Leagues.sharedInstance.myLeagues.count - 1), section: 0)
     tableView.insertRows(at: [indexPath], with: .fade)
@@ -128,16 +95,23 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
       if editingStyle == .delete {
-        if let leagueID = Leagues.sharedInstance.myLeagues[indexPath.row].id {
+        
+        let league = Leagues.sharedInstance.myLeagues[indexPath.row]
+        
+        if let leagueID = league.id {
           db.collection("leagues").document(leagueID).delete { error in
-            if error == nil {
-              Leagues.sharedInstance.myLeagues.remove(at: indexPath.row)
-              self.tableView.deleteRows(at: [indexPath], with: .fade)
-            } else {
-              print("error deleting \(error!)")
+            guard error == nil else {
+              print("Error: MyLeaguesTableVC#tableview(editingStyle): deleting league")
+              return
             }
+            
+            if league.public_league, let index = Leagues.sharedInstance.publicLeagues.firstIndex(where: { $0.id == leagueID }) {
+              Leagues.sharedInstance.publicLeagues.remove(at: index)
+            }
+            
+            Leagues.sharedInstance.myLeagues.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
           }
-
         }
       }
     }
@@ -175,12 +149,4 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
     }
     */
 
-}
-
-extension MyLeaguesTableViewController: RootTabBarDelegate {
-  func reloadTableData(leagues: [League] = []) {
-    print("HELLO!")
-    Leagues.sharedInstance.myLeagues = leagues
-    tableView.reloadData()
-  }
 }

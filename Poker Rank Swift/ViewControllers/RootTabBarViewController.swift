@@ -20,14 +20,16 @@ class RootTabBarViewController: UITabBarController {
   var viewControllersBackup = [UIViewController]()
   let leaguesRef = Firestore.firestore().collection("leagues")
   var rootTabBarDelegate: RootTabBarDelegate?
+  
   var publicLeagues = Leagues.sharedInstance.publicLeagues
   var myLeagues = Leagues.sharedInstance.myLeagues
+  
+  var publicDirty = false
+  var privateDirty = false
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     loadAllLeagues()
-    
-//    loadLeagues()
   }
   
   override func viewDidLoad() {
@@ -50,9 +52,6 @@ class RootTabBarViewController: UITabBarController {
   func loadLeagues(isPublic: Bool) {
     let query = leagueQuery(isPublic)
     
-    var publicDirty = false
-    var privateDirty = false
-    
     query.getDocuments() { querySnapshot, error in
       if !self.publicLeagues.isEmpty {
         self.publicLeagues.removeAll()
@@ -65,34 +64,37 @@ class RootTabBarViewController: UITabBarController {
         
         for document in querySnapshot!.documents {
           do {
-            let league = try FirebaseDecoder().decode(League.self, from: document.data())
+            var league = try FirebaseDecoder().decode(League.self, from: document.data())
+            league.id = document.documentID
             
             if isPublic {
               Leagues.sharedInstance.publicLeagues.append(league)
-              publicDirty = true
+              self.publicDirty = true
             } else {
               Leagues.sharedInstance.myLeagues.append(league)
-              privateDirty = true
+              self.privateDirty = true
             }
             
-            if publicDirty {
+            if self.publicDirty {
               let indexPath = IndexPath(row: (self.publicLeagues.count - 1), section: 0)
               let userInfoDictionary = ["indexPath": indexPath, "leagues": Leagues.sharedInstance.publicLeagues] as [String : Any]
+              
               NotificationCenter.default.post(name: .addSinglePublicLeague, object: nil, userInfo: userInfoDictionary)
+              self.publicDirty = false
             }
 
-            if privateDirty {
+            if self.privateDirty {
               let indexPath = IndexPath(row: (self.publicLeagues.count - 1), section: 0)
               let userInfoDictionary = ["indexPath": indexPath, "leagues": Leagues.sharedInstance.myLeagues] as [String : Any]
 
               NotificationCenter.default.post(name: .addSingleOwnedLeague, object: nil, userInfo: userInfoDictionary)
+              self.privateDirty = false
             }
             
           } catch {
             print("Error: RootTabBarVC#loadLeagues: converting snapshot to League model")
           }
         }
-        print("IM DONE")
       }
     }
   }
