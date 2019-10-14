@@ -13,7 +13,7 @@ import FirebaseFirestore
 import CodableFirebase
 
 class PublicLeaguesTableViewController: UITableViewController {
-  var leagues = Leagues.sharedInstance.publicLeagues
+//  var leagues = Leagues.sharedInstance.publicLeagues
   var db = Firestore.firestore()
   
   deinit {
@@ -35,7 +35,7 @@ class PublicLeaguesTableViewController: UITableViewController {
     let tabBarController = navigationController?.tabBarController as! RootTabBarViewController
     tabBarController.rootTabBarDelegate = self
     NotificationCenter.default.addObserver(self, selector: #selector(publicLeaguesLoaded), name: .didLoadPublicLeagues, object: nil)
-    NotificationCenter.default.addObserver(self, selector: #selector(addSingleLeague), name: .addSingleLeague, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(addSingleLeague), name: .addSinglePublicLeague, object: nil)
   }
 
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -44,22 +44,22 @@ class PublicLeaguesTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return leagues.count
+    return Leagues.sharedInstance.publicLeagues.count
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "leagueCell", for: indexPath)
 
-    cell.textLabel?.text = leagues[indexPath.row].name
-    if let location = leagues[indexPath.row].location {
+    cell.textLabel?.text = Leagues.sharedInstance.publicLeagues[indexPath.row].name
+    if let location = Leagues.sharedInstance.publicLeagues[indexPath.row].location {
       cell.detailTextLabel?.text = location
     }
-
+    print("HERE: \(Leagues.sharedInstance.publicLeagues.count)")
     return cell
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let league = leagues[indexPath.row]
+    let league = Leagues.sharedInstance.publicLeagues[indexPath.row]
     if let viewController = storyboard?.instantiateViewController(identifier: "LeagueDetailViewController") as? LeagueDetailViewController {
       viewController.league = league
       navigationController?.pushViewController(viewController, animated: true)
@@ -74,7 +74,7 @@ class PublicLeaguesTableViewController: UITableViewController {
   @objc
   func addSingleLeague(_ notification: Notification) {
     if let indexPath = notification.userInfo?["indexPath"] as? IndexPath, let newLeagues = notification.userInfo?["leagues"] as? [League] {
-      self.leagues = newLeagues
+      print(Leagues.sharedInstance.publicLeagues)
       tableView.insertRows(at: [indexPath], with: .fade)
     }
   }
@@ -128,7 +128,7 @@ class PublicLeaguesTableViewController: UITableViewController {
 
 extension PublicLeaguesTableViewController: RootTabBarDelegate {
   func reloadTableData(leagues: [League] = []) {
-    self.leagues = leagues
+//    self.leagues = leagues
     tableView.reloadData()
   }
 }

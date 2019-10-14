@@ -19,9 +19,9 @@ class LeaguesTableViewController: UITableViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.red]
-        if leagues.isEmpty {
-            loadLeagues()
-        }
+//        if leagues.isEmpty {
+//            loadLeagues()
+//        }
     }
     
     override func viewDidLoad() {

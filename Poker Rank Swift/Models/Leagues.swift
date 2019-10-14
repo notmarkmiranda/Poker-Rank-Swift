@@ -14,6 +14,7 @@ import FirebaseFirestore
 
 class Leagues {
   static let sharedInstance = Leagues()
+  
   var myLeagues = [League]()
   var publicLeagues = [League]()
 }
