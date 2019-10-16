@@ -46,6 +46,7 @@ class NewLeagueViewController: UIViewController {
         } else {
           if let documentId = ref?.documentID {
             newLeague.id = documentId
+            self.createAdminMembership(leagueId: documentId)
             self.createInitialSeason(leagueId: documentId)
           }
           self.newLeagueViewControllerDelegate?.appendNewLeague(newLeague)
@@ -55,6 +56,19 @@ class NewLeagueViewController: UIViewController {
       }
     } else {
       print("error: something went wrong")
+    }
+  }
+  
+  func createAdminMembership(leagueId: String) {
+    let membershipRef = db.collection("memberships")
+    var ref: DocumentReference? = nil
+    ref = membershipRef.addDocument(data: ["league_id": "asdf", "user_id": "fdsa"]) { error in
+      guard error == nil else {
+        print("Error: NewLeagueVC#createAdminMembership: \(error!)")
+        return
+      }
+      // do something with the membership?
+      // return the membershipId so it can be passed to the db call? no. probably not.
     }
   }
   

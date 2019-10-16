@@ -130,11 +130,7 @@ class RootTabBarViewController: UITabBarController {
       return leaguesRef.whereField("user_id", isEqualTo: user.uid).order(by: "name")
     }
   }
-  
-  func leaguesArray(_ isPublic: Bool) -> [League] {
-    return isPublic ? self.publicLeagues : self.myLeagues
-  }
-  
+    
   func emptyLeagues(isPublic: Bool) {
     isPublic ? Leagues.sharedInstance.publicLeagues.removeAll() : Leagues.sharedInstance.myLeagues.removeAll()
   }
