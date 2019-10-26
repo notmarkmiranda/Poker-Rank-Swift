@@ -119,6 +119,20 @@ class MyLeaguesTableViewController: UITableViewController, NewLeagueViewControll
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     let league = Leagues.sharedInstance.myLeagues[indexPath.row]
     if let viewController = storyboard?.instantiateViewController(identifier: "LeagueDetailViewController") as? LeagueDetailViewController {
+      // collect all the seasons based on league_id
+      let seasonRef = db.collection("seasons")
+      
+      seasonRef.whereField("league_id", isEqualTo: league.id).getDocuments() { querySnapshot, error in
+        guard error == nil else {
+          print("Error: MyLeaguesTVC#tableView(didSelectRowAt): loading seasons")
+          return
+        }
+        
+        // emppty seasons
+        
+        // convert and load!
+      }
+      
       viewController.league = league
       navigationController?.pushViewController(viewController, animated: true)
     }

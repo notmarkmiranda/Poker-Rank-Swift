@@ -9,26 +9,21 @@
 import UIKit
 
 class LeagueDetailViewController: UIViewController {
-    var league: League?
-    @IBOutlet weak var leagueName: UILabel!
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        if let league = league {
-            leagueName.text? = league.name
-        }
-        // Do any additional setup after loading the view.
+  var league: League?
+  @IBOutlet weak var leagueName: UILabel!
+  @IBOutlet weak var seasonsCount: UILabel!
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    if let league = league {
+      leagueName.text? = league.name
+      if let seasons = league.seasons {
+        seasonsCount.text? = "Seasons Count: \(seasons.count)"
+      } else {
+        seasonsCount.text? = "Seasons Count: 0"
+      }
+      
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+  }
 }
